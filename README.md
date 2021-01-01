@@ -7,6 +7,7 @@ Demo repo [https://github.com/TBXark/g4vercel-demo](https://github.com/TBXark/g4
 The Go Runtime is used by Vercel to compile Go Serverless Functions that expose a single HTTP handler, from a `.go` file within an `/api` directory at your project's root.
 
 
+
 ## Example
 
 For example, define an `index.go` file inside an `/api` directory as follows:
@@ -64,8 +65,7 @@ An example `index.go` file inside an `/api` directory.
 
 
 
-
-### Config
+## Config
 You must add `vercel.json` to forward all path requests to `api/index.go`, then you can use code to control routing, otherwise you will use vercel default routing forwarding
 
 ```json
@@ -77,6 +77,7 @@ You must add `vercel.json` to forward all path requests to `api/index.go`, then 
 ```
 
 
-### Thank
+
+## Thank
 
 代码来自 `geektutu` 的 `https://github.com/geektutu/7days-golang/tree/master/gee-web/day7-panic-recover`, 修改了部分代码并单独建立了此仓库方便 vercel 项目引用
