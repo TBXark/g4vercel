@@ -6,13 +6,14 @@ Demo repo [https://github.com/TBXark/g4vercel-demo](https://github.com/TBXark/g4
 
 The Go Runtime is used by Vercel to compile Go Serverless Functions that expose a single HTTP handler, from a `.go` file within an `/api` directory at your project's root.
 
-For example, define an `index.go` file inside an `/api` directory as follows:
 
-package handler
+## Example
+
+For example, define an `index.go` file inside an `/api` directory as follows:
 
 ```go
 
-package handle
+package handler
 
 import (
 	"fmt"
@@ -60,3 +61,17 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 ```
 
 An example `index.go` file inside an `/api` directory.
+
+
+
+
+### Config
+You must add `vercel.json` to forward all path requests to `api/index.go`, then you can use code to control routing, otherwise you will use vercel default routing forwarding
+
+```json
+{
+  "routes": [
+    { "src": "/(.*)", "dest": "/api" }
+  ]
+}
+```
