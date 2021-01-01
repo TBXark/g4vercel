@@ -75,3 +75,8 @@ You must add `vercel.json` to forward all path requests to `api/index.go`, then 
   ]
 }
 ```
+
+
+### Thank
+
+代码来自 `geektutu` 的 `https://github.com/geektutu/7days-golang/tree/master/gee-web/day7-panic-recover`, 修改了部分代码并单独建立了此仓库方便 vercel 项目引用
