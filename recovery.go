@@ -24,13 +24,15 @@ func trace(message string) string {
 }
 
 
-func Recovery(errorHandler func (err interface{}, c *Context) bool) HandlerFunc {
+func Recovery(errorHandler func (err interface{}, c *Context)) HandlerFunc {
 	return func(c *Context) {
 		defer func() {
 			if err := recover(); err != nil {
 				message := fmt.Sprintf("%s", err)
 				log.Printf("%s\n\n", trace(message))
-				if errorHandler == nil || !errorHandler(err, c) {
+				if errorHandler != nil {
+					errorHandler(err, c)
+				} else {
 					if httpError, ok := err.(HttpError); ok {
 						c.Fail(httpError.Status, httpError.Error())
 					} else {
