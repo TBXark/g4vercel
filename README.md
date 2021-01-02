@@ -25,7 +25,7 @@ import (
 
 func Handler(w http.ResponseWriter, r *http.Request) {
 	server := New()
-	server.Use(Recovery(func(err interface{}, c *Context) bool {
+	server.Use(Recovery(func(err interface{}, c *Context) {
 		if httpError, ok := err.(HttpError); ok {
 			c.JSON(httpError.Status, H{
 				"error": httpError.Error(),
@@ -36,8 +36,6 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 				"error": message,
 			})
 		}
-
-		return true
 	}))
 	server.GET("/", func(context *Context) {
 		context.JSON(200, H{
