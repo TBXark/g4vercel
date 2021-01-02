@@ -31,7 +31,11 @@ func Recovery(errorHandler func (err interface{}, c *Context) bool) HandlerFunc 
 				message := fmt.Sprintf("%s", err)
 				log.Printf("%s\n\n", trace(message))
 				if errorHandler == nil || !errorHandler(err, c) {
-					c.Fail(http.StatusInternalServerError, "Internal Server Error")
+					if httpError, ok := err.(HttpError); ok {
+						c.Fail(httpError.Status, httpError.Message)
+					} else {
+						c.Fail(http.StatusInternalServerError, "Internal Server Error")
+					}
 				}
 			}
 		}()

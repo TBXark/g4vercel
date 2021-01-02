@@ -1,7 +1,7 @@
 package gee
 
 import (
-	"net/http"
+	"fmt"
 	"strings"
 )
 
@@ -92,7 +92,7 @@ func (r *router) handle(c *Context) {
 		c.handlers = append(c.handlers, r.handlers[key])
 	} else {
 		c.handlers = append(c.handlers, func(c *Context) {
-			c.String(http.StatusNotFound, "404 NOT FOUND: %s\n", c.Path)
+			panic(HttpError{404, fmt.Sprintf("Not found:  %s", c.Path)})
 		})
 	}
 	c.Next()
