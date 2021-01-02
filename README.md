@@ -18,40 +18,54 @@ package handler
 
 import (
 	"fmt"
-	"github.com/tbxark/g4vercel"
+	. "github.com/tbxark/g4vercel"
 	"net/http"
 )
 
 
 func Handler(w http.ResponseWriter, r *http.Request) {
-	server := gee.Default()
-	server.GET("/", func(context *gee.Context) {
-		context.JSON(200, gee.H{
+	server := New()
+	server.Use(Recovery(func(err interface{}, c *Context) bool {
+		if httpError, ok := err.(HttpError); ok {
+			c.JSON(httpError.Status, H{
+				"error": httpError.Error(),
+			})
+		} else {
+			message := fmt.Sprintf("%s", err)
+			c.JSON(500, H{
+				"error": message,
+			})
+		}
+
+		return true
+	}))
+	server.GET("/", func(context *Context) {
+		context.JSON(200, H{
 			"status": "OK",
 		})
 	})
-	server.GET("/hello", func(context *gee.Context) {
+	server.GET("/hello", func(context *Context) {
 		name := context.Query("name")
 		if name == "" {
-			context.JSON(400, gee.H{
+			context.JSON(400, H{
 				"error": "name not found",
 			})
 		} else {
-			context.JSON(200, gee.H{
+			context.JSON(200, H{
 				"data": fmt.Sprintf("Hello %s!", name),
 			})
 		}
 	})
-	server.GET("/user/:id", func(context *gee.Context) {
-		context.JSON(400, gee.H{
-			"data": gee.H{
+	server.GET("/user/:id", func(context *Context) {
+		context.JSON(400, H{
+			"data": H{
 				"id": context.Param("id"),
 			},
 		})
 	})
-	server.GET("/long/long/long/path/*test", func(context *gee.Context) {
-		context.JSON(200, gee.H{
-			"data": gee.H{
+	server.GET("/long/long/long/path/*test", func(context *Context) {
+		context.JSON(200, H{
+			"data": H{
 				"url": context.Path,
 			},
 		})
