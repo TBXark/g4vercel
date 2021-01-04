@@ -1,7 +1,6 @@
 package gee
 
 import (
-	"html/template"
 	"log"
 	"net/http"
 	"strings"
@@ -21,10 +20,8 @@ type (
 
 	Engine struct {
 		*RouterGroup
-		router        *router
-		groups        []*RouterGroup     // store all groups
-		htmlTemplates *template.Template // for html render
-		funcMap       template.FuncMap   // for html render
+		router *router
+		groups []*RouterGroup // store all groups
 	}
 )
 
@@ -77,7 +74,12 @@ func (group *RouterGroup) POST(pattern string, handler HandlerFunc) {
 	group.addRoute("POST", pattern, handler)
 }
 
-func (engine *Engine) Handle(w http.ResponseWriter, req *http.Request) {
+// Run defines the method to start a http server
+func (engine *Engine) Run(addr string) (err error) {
+	return http.ListenAndServe(addr, engine)
+}
+
+func (engine *Engine) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	var middlewares []HandlerFunc
 	for _, group := range engine.groups {
 		if strings.HasPrefix(req.URL.Path, group.prefix) {
@@ -88,4 +90,8 @@ func (engine *Engine) Handle(w http.ResponseWriter, req *http.Request) {
 	c.handlers = middlewares
 	c.engine = engine
 	engine.router.handle(c)
+}
+
+func (engine *Engine) Handle(w http.ResponseWriter, req *http.Request)  {
+	engine.ServeHTTP(w, req)
 }
