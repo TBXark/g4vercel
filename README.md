@@ -2,11 +2,9 @@
  
 > Deploy go web server in vercel
 
-Demo repo [https://github.com/TBXark/g4vercel-demo](https://github.com/TBXark/g4vercel-demo)
-
 The Go Runtime is used by Vercel to compile Go Serverless Functions that expose a single HTTP handler, from a `.go` file within an `/api` directory at your project's root.
 
-
+Demo repo [https://github.com/TBXark/g4vercel-demo](https://github.com/TBXark/g4vercel-demo)
 
 ## Example
 
@@ -18,35 +16,35 @@ package handler
 
 import (
 	"fmt"
-	. "github.com/tbxark/g4vercel"
 	"net/http"
-)
 
+	. "github.com/tbxark/g4vercel"
+)
 
 func Handler(w http.ResponseWriter, r *http.Request) {
 	server := New()
 	server.Use(Recovery(func(err interface{}, c *Context) {
 		if httpError, ok := err.(HttpError); ok {
 			c.JSON(httpError.Status, H{
-				"error": httpError.Error(),
+				"message": httpError.Error(),
 			})
 		} else {
 			message := fmt.Sprintf("%s", err)
 			c.JSON(500, H{
-				"error": message,
+				"message": message,
 			})
 		}
 	}))
 	server.GET("/", func(context *Context) {
 		context.JSON(200, H{
-			"status": "OK",
+			"message": "OK",
 		})
 	})
 	server.GET("/hello", func(context *Context) {
 		name := context.Query("name")
 		if name == "" {
 			context.JSON(400, H{
-				"error": "name not found",
+				"message": "name not found",
 			})
 		} else {
 			context.JSON(200, H{
@@ -70,6 +68,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	})
 	server.Handle(w, r)
 }
+
 
 ```
 
